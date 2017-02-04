@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="dimen_16">16dp</dimen>
+    <dimen name="contact_image_width">48dp</dimen>
+    <dimen name="contact_image_height">48dp</dimen>
+    <dimen name="font_17">17sp</dimen>
+    <dimen name="font_15">15sp</dimen>
+</resources>

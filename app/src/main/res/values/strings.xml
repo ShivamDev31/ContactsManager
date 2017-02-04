@@ -1,0 +1,33 @@
+<resources>
+    <string name="app_name">Contacts Manager</string>
+
+    <string name="dialog_action_ok">OK</string>
+    <string name="dialog_error_title">Sorry</string>
+
+
+    <!-- Error View -->
+    <string name="error_title">Oops</string>
+    <string name="error_message">There was a problem loading the pokemon, please try again!</string>
+    <string name="error_reload">Reload</string>
+    <string name="title_activity_maps_sample">Map</string>
+    <string name="send_message">Send Message</string>
+    <string name="share_contact">Share Contact</string>
+    <string name="first_name">First Name</string>
+    <string name="last_name">Last Name</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="email_address">Email Address</string>
+    <string name="save">Save</string>
+    <string name="error_first_name_empty">First name cannot be empty.</string>
+    <string name="error_last_name_empty">Last name cannot be empty</string>
+    <string name="error_phone_number_not_valid">Phone number not valid.</string>
+    <string name="error_email_not_valid">Email not valid.</string>
+    <string name="image_selection_title">Select photo!</string>
+    <string name="error_while_capturing_image">Error while capturing image.</string>
+    <string name="error_while_getting_image">Error while getting image from gallery.</string>
+    <string name="error_first_name_less_than_three_chars">First name should more than three characters</string>
+    <string name="error_saving_new_contact">Error while saving contact. Please try again.</string>
+    <string name="saving_contact">Saving contact…</string>
+    <string name="contact_posted_successfully">Contact posted successfully</string>
+    <string name="error_invalid_phone_number">%s is invalid.</string>
+    <string name="error_invalid_email">%s is invalid.</string>
+</resources>
