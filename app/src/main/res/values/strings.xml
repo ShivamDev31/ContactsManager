@@ -4,8 +4,16 @@
     <string name="dialog_action_ok">OK</string>
     <string name="dialog_error_title">Sorry</string>
 
+    <string-array name="image_options">
+        <item>Take Photo</item>
+        <item>From Gallery</item>
+    </string-array>
 
-    <!-- Error View -->
+    <string-array name="contact_share_options">
+        <item>Share as a Text</item>
+        <item>Share as a Contact</item>
+    </string-array>
+
     <string name="error_title">Oops</string>
     <string name="error_message">There was a problem loading the pokemon, please try again!</string>
     <string name="error_reload">Reload</string>
@@ -30,4 +38,13 @@
     <string name="contact_posted_successfully">Contact posted successfully</string>
     <string name="error_invalid_phone_number">%s is invalid.</string>
     <string name="error_invalid_email">%s is invalid.</string>
+    <string name="error_while_fetching_contact_details">Error while fetching contact details.</string>
+    <string name="fetching_contact_details">Fetching contact details</string>
+    <string name="select_the_source">Select a source.</string>
+    <string name="error_no_image_selected">Please select an image.</string>
+    <string name="error_image_not_found">Image not found, please upload some other image</string>
+    <string name="error_last_name_less_than_three_chars">Last name cannot be less than 3 letters</string>
+    <string name="error_no_email_app">No email application found.</string>
+    <string name="error_updating_favorite">Error while updating favorite.</string>
+    <string name="updating_favorite">Updating favorite.</string>
 </resources>

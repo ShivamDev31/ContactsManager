@@ -16,7 +16,6 @@ import com.shivamdev.contactsmanager.features.contacts.screen.ContactsFragmentSc
 import com.shivamdev.contactsmanager.features.contacts.view.adapter.ContactsAdapter;
 import com.shivamdev.contactsmanager.features.main.view.ContactsActivity;
 import com.shivamdev.contactsmanager.network.data.ContactData;
-import com.shivamdev.contactsmanager.utils.Logger;
 
 import java.util.List;
 
@@ -106,7 +105,7 @@ public class ContactsFragment extends BaseFragment implements ContactsFragmentSc
     @Override
     public void showError(Throwable throwable) {
         Timber.e(throwable, "Error while loading contacts : ");
-        Logger.toast(getString(R.string.error_loading_contacts_msg));
+        showSnack(getString(R.string.error_loading_contacts_msg));
         showErrorHideList(true);
     }
 

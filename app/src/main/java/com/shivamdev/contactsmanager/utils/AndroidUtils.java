@@ -3,6 +3,7 @@ package com.shivamdev.contactsmanager.utils;
 import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.net.Uri;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -23,6 +24,12 @@ public class AndroidUtils {
 
     public void loadProfileImageWithGlide(String imageUrl, ImageView imageView) {
         Glide.with(context).load(imageUrl)
+                .bitmapTransform(new CircleTransform(context))
+                .placeholder(R.drawable.ic_person).into(imageView);
+    }
+
+    public void loadLocalProfileImageWithGlide(Uri imageUri, ImageView imageView) {
+        Glide.with(context).load(imageUri)
                 .bitmapTransform(new CircleTransform(context))
                 .placeholder(R.drawable.ic_person).into(imageView);
     }

@@ -7,6 +7,7 @@ import com.shivamdev.contactsmanager.network.api.ContactsApi;
 import com.shivamdev.contactsmanager.network.data.ContactData;
 import com.shivamdev.contactsmanager.utils.RxUtils;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -15,7 +16,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import timber.log.Timber;
 
 /**
  * Created by shivam on 1/2/17.
@@ -59,11 +59,21 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
 
                             @Override
                             public void onNext(List<ContactData> contactData) {
-                                Timber.i("Contacts list size : %d", contactData.size());
+                                filterFavoriteContacts(contactData);
                                 showContactsOnUi(contactData);
                             }
                         });
         addSubscription(subs);
+    }
+
+    private void filterFavoriteContacts(List<ContactData> contactData) {
+        List<ContactData> favoriteList = new ArrayList<>();
+        for (ContactData contact : contactData) {
+            if (contact.isFavorite) {
+                favoriteList.add(contact);
+            }
+        }
+        contactData.addAll(0, favoriteList);
     }
 
     private void saveContactsInDb(List<ContactData> contactList) {

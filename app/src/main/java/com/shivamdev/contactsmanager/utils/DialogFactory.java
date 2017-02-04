@@ -1,6 +1,5 @@
 package com.shivamdev.contactsmanager.utils;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.Dialog;
 import android.app.ProgressDialog;
@@ -11,8 +10,6 @@ import android.support.annotation.StringRes;
 import android.support.v7.app.AlertDialog;
 
 import com.shivamdev.contactsmanager.R;
-
-import permissions.dispatcher.NeedsPermission;
 
 import static com.shivamdev.contactsmanager.common.constants.Constants.REQUEST_CAMERA;
 import static com.shivamdev.contactsmanager.common.constants.Constants.SELECT_GALLERY;

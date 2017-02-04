@@ -1,33 +1,38 @@
 package com.shivamdev.contactsmanager.features.contacts.view;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.annotation.RequiresApi;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
 
+import com.canelmas.let.AskPermission;
+import com.canelmas.let.Let;
 import com.shivamdev.contactsmanager.R;
 import com.shivamdev.contactsmanager.common.ContactsApplication;
 import com.shivamdev.contactsmanager.common.base.BaseFragment;
-import com.shivamdev.contactsmanager.common.constants.Constants;
 import com.shivamdev.contactsmanager.features.contacts.presenter.AddContactPresenter;
 import com.shivamdev.contactsmanager.features.contacts.screen.AddContactScreen;
 import com.shivamdev.contactsmanager.features.main.view.ContactsActivity;
 import com.shivamdev.contactsmanager.network.data.ContactData;
+import com.shivamdev.contactsmanager.utils.AndroidUtils;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.OnClick;
-import permissions.dispatcher.NeedsPermission;
-import permissions.dispatcher.RuntimePermissions;
 import timber.log.Timber;
 
 import static com.shivamdev.contactsmanager.common.constants.Constants.REQUEST_CAMERA;
@@ -37,7 +42,6 @@ import static com.shivamdev.contactsmanager.common.constants.Constants.SELECT_GA
  * Created by shivam on 3/2/17.
  */
 
-@RuntimePermissions
 public class AddContactFragment extends BaseFragment implements AddContactScreen {
 
     @Inject
@@ -57,6 +61,8 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
 
     @BindView(R.id.et_email_address)
     EditText etEmailAddress;
+
+    private Uri displayPicUri;
 
 
     public static AddContactFragment newInstance() {
@@ -83,7 +89,6 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
     @OnClick(R.id.iv_profile_pic)
     void selectImage() {
         showPictureSelectionDialog();
-        //DialogFactory.showPictureSelectionDialog(getActivity(), getString(R.string.image_selection_title), Constants.IMAGE_SELECTION_OPTIONS);
     }
 
     @OnClick(R.id.b_save_contact)
@@ -98,8 +103,22 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
         contactData.lastName = lastName;
         contactData.phoneNumber = phoneNumber;
         contactData.email = email;
+        if (displayPicUri != null) {
+            File file = new File(getPathFromUri(displayPicUri));
 
-        presenter.saveContact(contactData);
+            presenter.saveContact(file, contactData);
+        } else {
+            showSnack(getString(R.string.error_no_image_selected));
+        }
+
+    }
+
+    public String getPathFromUri(Uri uri) {
+        String[] projection = {MediaStore.Images.Media.DATA};
+        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+        cursor.moveToFirst();
+        return cursor.getString(columnIndex);
     }
 
     @Override
@@ -133,6 +152,12 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
     }
 
     @Override
+    public void showLastNameLessThanThreeError() {
+        showSnack(getString(R.string.error_last_name_less_than_three_chars));
+        etFirstName.requestFocus();
+    }
+
+    @Override
     public void showErrorWhileAddingContact(Throwable e) {
         showSnack(getString(R.string.error_saving_new_contact));
         Timber.e(e, "Error while saving new contact");
@@ -155,26 +180,40 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
         activity.popBackStackImmediate();
     }
 
-    @RequiresApi(api = Build.VERSION_CODES.JELLY_BEAN)
-    @NeedsPermission({Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE})
-    private void showPictureSelectionDialog() {
-        CharSequence[] options = Constants.IMAGE_SELECTION_OPTIONS;
+    @Override
+    public void showImageError() {
+        showSnack(getString(R.string.error_image_not_found));
+    }
+
+    @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
+    @AskPermission({Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE})
+    protected void showPictureSelectionDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.image_selection_title));
-        builder.setItems(options, (dialog, item) -> {
-            if (options[item].equals(options[0])) {
-                Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                startActivityForResult(intent, REQUEST_CAMERA);
-            } else if (options[item].equals(options[1])) {
-                Intent intent = new Intent(
-                        Intent.ACTION_PICK,
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                startActivityForResult(intent, SELECT_GALLERY);
-            } else if (options[item].equals(options[2])) {
-                dialog.dismiss();
+        builder.setItems(R.array.image_options, (dialog, item) -> {
+            switch (item) {
+                case 0:
+                    launchCamera();
+                    break;
+                case 1:
+                    galleryPicker();
+                    break;
             }
         });
         builder.show();
+    }
+
+    private void galleryPicker() {
+        Intent intent = new Intent(
+                Intent.ACTION_PICK,
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        Intent intentChooser = Intent.createChooser(intent, getString(R.string.select_the_source));
+        startActivityForResult(intentChooser, SELECT_GALLERY);
+    }
+
+    private void launchCamera() {
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        startActivityForResult(intent, REQUEST_CAMERA);
     }
 
     @Override
@@ -183,19 +222,30 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
         switch (requestCode) {
             case REQUEST_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
-                    Timber.i(data.toString());
+                    setProfileImage(data.getData());
                 } else {
                     showSnack(getString(R.string.error_while_capturing_image));
                 }
                 break;
             case SELECT_GALLERY:
                 if (resultCode == Activity.RESULT_OK) {
-                    Timber.i(data.toString());
+                    setProfileImage(data.getData());
                 } else {
                     showSnack(getString(R.string.error_while_getting_image));
                 }
                 break;
         }
+    }
+
+    private void setProfileImage(Uri uri) {
+        displayPicUri = uri;
+        new AndroidUtils(context).loadLocalProfileImageWithGlide(uri, ivProfilePic);
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Let.handle(this, requestCode, permissions, grantResults);
     }
 
     @Override

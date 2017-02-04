@@ -1,12 +1,17 @@
 package com.shivamdev.contactsmanager.features.contacts.screen;
 
 import com.shivamdev.contactsmanager.common.mvp.MvpView;
+import com.shivamdev.contactsmanager.network.data.ContactData;
 
 /**
  * Created by shivam on 3/2/17.
  */
 
 public interface ContactDetailsScreen extends MvpView {
+
+    void showError(Throwable e);
+
+    void updateContactData(ContactData data);
 
     void showProfilePic(String profileUrl);
 
@@ -33,4 +38,14 @@ public interface ContactDetailsScreen extends MvpView {
     void showInvalidEmailError(String email);
 
     void composeSms(String phoneNumber);
+
+    void showLoader();
+
+    void hideLoader();
+
+    void errorWhileUpdatingFavorite(Throwable e);
+
+    void showFavoriteLoader();
+
+    void showShareContactDialog();
 }

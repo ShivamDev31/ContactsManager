@@ -12,7 +12,7 @@
         android:layout_height="@dimen/dimen_120"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="@dimen/dimen_16"
-        app:srcCompat="@drawable/grey_circle_bg" />
+        android:background="@drawable/grey_circle_bg" />
 
     <LinearLayout
         android:id="@+id/ll_name"

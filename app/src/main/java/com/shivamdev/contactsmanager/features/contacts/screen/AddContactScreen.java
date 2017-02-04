@@ -18,11 +18,16 @@ public interface AddContactScreen extends MvpView {
 
     void showFirstNameLessThanThreeError();
 
+    void showLastNameLessThanThreeError();
+
     void showErrorWhileAddingContact(Throwable e);
 
     void showLoader();
-    
+
     void hideLoader();
 
     void contactSavedSuccessfully();
+
+    void showImageError();
+
 }

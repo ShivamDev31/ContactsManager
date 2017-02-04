@@ -9,6 +9,7 @@ import com.shivamdev.contactsmanager.di.module.AppModule;
 import com.shivamdev.contactsmanager.di.module.DataModule;
 import com.shivamdev.contactsmanager.di.scope.ApplicationContext;
 import com.shivamdev.contactsmanager.features.contacts.view.AddContactFragment;
+import com.shivamdev.contactsmanager.features.contacts.view.ContactDetailsFragment;
 import com.shivamdev.contactsmanager.features.contacts.view.ContactsFragment;
 import com.shivamdev.contactsmanager.di.module.ApiModule;
 
@@ -36,4 +37,6 @@ public interface AppComponent {
     void inject(ContactsFragment fragment);
 
     void inject(AddContactFragment fragment);
+
+    void inject(ContactDetailsFragment fragment);
 }

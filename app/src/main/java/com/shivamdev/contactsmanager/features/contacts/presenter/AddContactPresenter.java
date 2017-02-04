@@ -9,8 +9,13 @@ import com.shivamdev.contactsmanager.utils.CommonUtils;
 import com.shivamdev.contactsmanager.utils.RxUtils;
 import com.shivamdev.contactsmanager.utils.StringUtils;
 
+import java.io.File;
+
 import javax.inject.Inject;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -30,7 +35,7 @@ public class AddContactPresenter extends BasePresenter<AddContactScreen> {
     }
 
 
-    public void saveContact(ContactData contact) {
+    public void saveContact(File image, ContactData contact) {
         if (StringUtils.isEmpty(contact.firstName)) {
             getView().showFirstNameEmptyError();
             return;
@@ -41,22 +46,41 @@ public class AddContactPresenter extends BasePresenter<AddContactScreen> {
             return;
         }
 
-        if (CommonUtils.isPhoneNumberValid(contact.phoneNumber)) {
+        if (contact.lastName.length() < 3) {
+            getView().showLastNameLessThanThreeError();
+            return;
+        }
+
+        if (!CommonUtils.isPhoneNumberValid(contact.phoneNumber)) {
             getView().showPhoneNumberError();
             return;
         }
-        if (CommonUtils.isEmailValid(contact.email)) {
+
+        if (!CommonUtils.isEmailValid(contact.email)) {
             getView().showEmailError();
             return;
         }
 
-        saveContactOnServer(contact);
+        if (image == null) {
+            getView().showImageError();
+            return;
+        }
+
+        saveContactOnServer(image, contact);
     }
 
-    private void saveContactOnServer(ContactData contact) {
+    private void saveContactOnServer(File image, ContactData contact) {
         checkViewAttached();
         getView().showLoader();
-        Subscription subs = contactsApi.postContact(contact)
+        RequestBody profileImage = RequestBody.create(MediaType.parse("image/*"), image);
+        RequestBody firstName = getRequestBody(contact.firstName);
+        RequestBody lastName = getRequestBody(contact.lastName);
+        RequestBody email = getRequestBody(contact.email);
+        RequestBody mobile = getRequestBody(contact.phoneNumber);
+        MultipartBody.Part imageBody =
+                MultipartBody.Part.createFormData("profile_pic", image.getName(), profileImage);
+        //Subscription subs = contactsApi.postContact(firstName, lastName, email, mobile)//, imageBody)
+        Subscription subs = contactsApi.newContact(contact)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(new Subscriber<Void>() {
                     @Override
@@ -77,5 +101,10 @@ public class AddContactPresenter extends BasePresenter<AddContactScreen> {
                     }
                 });
         addSubscription(subs);
+    }
+
+    private RequestBody getRequestBody(String content) {
+        return RequestBody.create(
+                MediaType.parse("application/json"), content);
     }
 }

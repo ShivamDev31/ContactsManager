@@ -1,24 +1,32 @@
 package com.shivamdev.contactsmanager.features.contacts.view;
 
+import android.Manifest;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.canelmas.let.AskPermission;
+import com.canelmas.let.Let;
 import com.shivamdev.contactsmanager.R;
+import com.shivamdev.contactsmanager.common.ContactsApplication;
 import com.shivamdev.contactsmanager.common.base.BaseFragment;
 import com.shivamdev.contactsmanager.features.contacts.presenter.ContactDetailsPresenter;
 import com.shivamdev.contactsmanager.features.contacts.screen.ContactDetailsScreen;
 import com.shivamdev.contactsmanager.network.data.ContactData;
 import com.shivamdev.contactsmanager.utils.AndroidUtils;
-import com.shivamdev.contactsmanager.utils.Logger;
 
 import org.parceler.Parcels;
+
+import java.io.File;
 
 import javax.inject.Inject;
 
@@ -72,7 +80,7 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
     @BindView(R.id.b_share_contact)
     Button bShareContact;
 
-    private ContactData contactData;
+    private ContactData updatedContactData;
 
     public static ContactDetailsFragment newInstance(ContactData contactData) {
         ContactDetailsFragment fragment = new ContactDetailsFragment();
@@ -90,41 +98,51 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
 
     @Override
     protected void injectComponent() {
-        fragmentComponent().inject(this);
+        ContactsApplication.getInstance().getComponent().inject(this);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         presenter.attachView(this);
-        contactData = Parcels.unwrap(getArguments().getParcelable(CONTACT_DATA_KEY));
-        presenter.showContactDetailsOnUi(contactData);
+        ContactData contactData = Parcels.unwrap(getArguments().getParcelable(CONTACT_DATA_KEY));
+        presenter.getContactDetailsFromServer(contactData.id);
     }
 
     @OnClick(R.id.iv_favorite)
     void favoriteClick() {
-        Logger.toast("Clicked on favorite");
+        presenter.updateFavorite(updatedContactData);
     }
 
+    @AskPermission(Manifest.permission.CALL_PHONE)
     @OnClick(R.id.iv_call)
     void callNumber() {
-        presenter.callNumber(contactData.phoneNumber);
+        presenter.callNumber(updatedContactData.phoneNumber);
     }
 
     @OnClick(R.id.iv_email)
     void emailContact() {
-        presenter.emailContact(contactData.email);
+        presenter.emailContact(updatedContactData.email);
     }
 
     @OnClick(R.id.b_send_message)
     void sendMessage() {
-        presenter.sendMessage(contactData.phoneNumber);
-        Logger.toast("Clicked on send message");
+        presenter.sendMessage(updatedContactData.phoneNumber);
     }
 
     @OnClick(R.id.b_share_contact)
     void shareContact() {
-        Logger.toast("Clicked on share contact");
+        presenter.shareContact();
+    }
+
+    @Override
+    public void showError(Throwable e) {
+        showSnack(getString(R.string.error_while_fetching_contact_details));
+    }
+
+    @Override
+    public void updateContactData(ContactData data) {
+        this.updatedContactData = data;
     }
 
     @Override
@@ -186,10 +204,14 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
     @Override
     public void composeEmail(String email) {
         Intent emailIntent = new Intent(Intent.ACTION_SEND);
-        emailIntent.setData(Uri.parse("mailto:"));
-        emailIntent.setType("text/plain");
-        emailIntent.putExtra(Intent.EXTRA_EMAIL  , new String[]{email});
-        startActivity(emailIntent);
+        emailIntent.setType("message/rfc822");
+        emailIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        emailIntent.putExtra(Intent.EXTRA_EMAIL, new String[]{email});
+        try {
+            context.startActivity(Intent.createChooser(emailIntent, "Send mail..."));
+        } catch (android.content.ActivityNotFoundException ex) {
+            showSnack(getString(R.string.error_no_email_app));
+        }
     }
 
     @Override
@@ -199,10 +221,77 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
 
     @Override
     public void composeSms(String phoneNumber) {
-        Intent smsIntent = new Intent(Intent.ACTION_VIEW);
-        smsIntent.putExtra("address"  , phoneNumber);
-        smsIntent.setType("vnd.android-dir/mms-sms");
+        Intent smsIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("sms:"
+                + phoneNumber));
+        smsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(smsIntent);
+    }
+
+    @Override
+    public void showLoader() {
+        showProgressDialog(getString(R.string.fetching_contact_details));
+    }
+
+    @Override
+    public void hideLoader() {
+        hideProgressDialog();
+    }
+
+    @Override
+    public void errorWhileUpdatingFavorite(Throwable e) {
+        showSnack(getString(R.string.error_updating_favorite));
+    }
+
+    @Override
+    public void showFavoriteLoader() {
+        showProgressDialog(getString(R.string.updating_favorite));
+    }
+
+    @Override
+    public void showShareContactDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(context);
+        builder.setTitle(R.string.share_contact)
+                .setItems(R.array.contact_share_options, (dialog, which) -> {
+                    switch (which) {
+                        case 0:
+                            //via SMS
+                            shareAsSMS();
+                            break;
+                        case 1:
+                            shareAsVCF();
+                            break;
+                    }
+                }).create().show();
+    }
+
+    private void shareAsSMS() {
+        Intent shareSmsIntent = new Intent();
+        shareSmsIntent.setAction(Intent.ACTION_SENDTO);
+        shareSmsIntent.setData(Uri.parse("smsto:"));
+        shareSmsIntent.putExtra("sms_body", "Name: " + updatedContactData.firstName
+                + " " + updatedContactData.lastName + " \n" +
+                "Phone Number: " + updatedContactData.phoneNumber + " \n" +
+                "Email: " + updatedContactData.email + "\n");
+        shareSmsIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        context.startActivity(shareSmsIntent);
+    }
+
+    @AskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+    private void shareAsVCF() {
+        File vcfFile = presenter.generateVCF(updatedContactData);
+        Intent shareVcfIntent = new Intent();
+        shareVcfIntent.setAction(Intent.ACTION_SEND);
+        Uri contactUri = FileProvider.getUriForFile(context, context
+                .getApplicationContext().getPackageName() + ".provider", vcfFile);
+        shareVcfIntent.putExtra(Intent.EXTRA_STREAM, contactUri);
+        shareVcfIntent.setType("text/x-vcard");
+        shareVcfIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(shareVcfIntent);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        Let.handle(this, requestCode, permissions, grantResults);
     }
 
     @Override

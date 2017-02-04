@@ -2,7 +2,6 @@ package com.shivamdev.contactsmanager.di.component;
 
 import com.shivamdev.contactsmanager.di.module.FragmentModule;
 import com.shivamdev.contactsmanager.di.scope.PerFragment;
-import com.shivamdev.contactsmanager.features.contacts.view.ContactDetailsFragment;
 
 import dagger.Subcomponent;
 
@@ -18,7 +17,7 @@ import dagger.Subcomponent;
 public interface FragmentComponent {
     //void inject(ContactsFragment fragment);
 
-    void inject(ContactDetailsFragment fragment);
+    //void inject(ContactDetailsFragment fragment);
 
     //void inject(AddContactFragment fragment);
 }
