@@ -1,7 +1,5 @@
 package com.shivamdev.contactsmanager.features.contacts.presenter;
 
-import android.os.Environment;
-
 import com.shivamdev.contactsmanager.common.mvp.BasePresenter;
 import com.shivamdev.contactsmanager.features.contacts.screen.ContactDetailsScreen;
 import com.shivamdev.contactsmanager.network.api.ContactsApi;
@@ -9,10 +7,6 @@ import com.shivamdev.contactsmanager.network.data.ContactData;
 import com.shivamdev.contactsmanager.utils.CommonUtils;
 import com.shivamdev.contactsmanager.utils.RxUtils;
 import com.shivamdev.contactsmanager.utils.StringUtils;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 
 import javax.inject.Inject;
 
@@ -150,27 +144,4 @@ public class ContactDetailsPresenter extends BasePresenter<ContactDetailsScreen>
         getView().showShareContactDialog();
     }
 
-    public File generateVCF(ContactData contact) {
-
-        //Create a vcf file
-        String filename = Environment.getExternalStorageDirectory() + "/generated.vcf";
-
-        File vcfFile = new File(filename);
-        FileWriter fw;
-        try {
-            fw = new FileWriter(vcfFile);
-            fw.write("BEGIN:VCARD\r\n");
-            fw.write("VERSION:3.0\r\n");
-            fw.write("N:" + contact.lastName + ";" + contact.firstName + "\r\n");
-            fw.write("FN:" + contact.firstName + " " + contact.lastName + "\r\n");
-            fw.write("TEL;TYPE=HOME,VOICE:" + contact.phoneNumber + "\r\n");
-            fw.write("EMAIL;TYPE=PREF,INTERNET:" + contact.email + "\r\n");
-            fw.write("END:VCARD\r\n");
-            fw.close();
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return vcfFile;
-    }
 }

@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
 import android.widget.EditText;
@@ -18,9 +19,11 @@ import android.widget.ImageView;
 
 import com.canelmas.let.AskPermission;
 import com.canelmas.let.Let;
+import com.shivamdev.contactsmanager.BuildConfig;
 import com.shivamdev.contactsmanager.R;
 import com.shivamdev.contactsmanager.common.ContactsApplication;
 import com.shivamdev.contactsmanager.common.base.BaseFragment;
+import com.shivamdev.contactsmanager.common.constants.Constants;
 import com.shivamdev.contactsmanager.features.contacts.presenter.AddContactPresenter;
 import com.shivamdev.contactsmanager.features.contacts.screen.AddContactScreen;
 import com.shivamdev.contactsmanager.features.main.view.ContactsActivity;
@@ -203,6 +206,21 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
         builder.show();
     }
 
+    private void launchCamera() {
+        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (cameraIntent.resolveActivity(context.getPackageManager()) != null) {
+
+            Uri uri = FileProvider.getUriForFile(context,
+                    BuildConfig.APPLICATION_ID + ".provider",
+                    AndroidUtils.generateProfilePic());
+
+            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+            Intent cameraChooser = Intent.createChooser(cameraIntent,
+                    getString(R.string.select_camera_app));
+            startActivityForResult(cameraChooser, Constants.REQUEST_CAMERA);
+        }
+    }
+
     private void galleryPicker() {
         Intent intent = new Intent(
                 Intent.ACTION_PICK,
@@ -211,18 +229,20 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
         startActivityForResult(intentChooser, SELECT_GALLERY);
     }
 
-    private void launchCamera() {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        startActivityForResult(intent, REQUEST_CAMERA);
-    }
-
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
             case REQUEST_CAMERA:
                 if (resultCode == Activity.RESULT_OK) {
-                    setProfileImage(data.getData());
+                    if (data != null && data.getData() != null) {
+                        setProfileImage(data.getData());
+                    } else if (AndroidUtils.generateProfilePic() != null) {
+                        Uri nullResultUri = Uri.fromFile(AndroidUtils.generateProfilePic());
+                        setProfileImage(nullResultUri);
+                    } else {
+                        showSnack(getString(R.string.error_while_capturing_image));
+                    }
                 } else {
                     showSnack(getString(R.string.error_while_capturing_image));
                 }

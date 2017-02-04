@@ -278,7 +278,7 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
 
     @AskPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
     private void shareAsVCF() {
-        File vcfFile = presenter.generateVCF(updatedContactData);
+        File vcfFile = AndroidUtils.generateVCF(updatedContactData);
         Intent shareVcfIntent = new Intent();
         shareVcfIntent.setAction(Intent.ACTION_SEND);
         Uri contactUri = FileProvider.getUriForFile(context, context

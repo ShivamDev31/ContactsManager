@@ -47,4 +47,5 @@
     <string name="error_no_email_app">No email application found.</string>
     <string name="error_updating_favorite">Error while updating favorite.</string>
     <string name="updating_favorite">Updating favorite.</string>
+    <string name="select_camera_app">Select camera app</string>
 </resources>
