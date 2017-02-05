@@ -32,7 +32,7 @@ public class DbHelper extends SQLiteOpenHelper {
             + " TEXT,"
             + ContactsTable.PROFILE_URL
             + " TEXT,"
-            + ContactsTable.IS_FAVORITE
+            + ContactsTable.IS_FAVOURITE
             + " INTEGER NOT NULL DEFAULT "
             + Db.BOOLEAN_FALSE + ","
             + ContactsTable.CREATED_AT
@@ -44,9 +44,9 @@ public class DbHelper extends SQLiteOpenHelper {
     static final String GET_ALL_CONTACTS =
             "SELECT * FROM " + DbConstants.CONTACTS_TABLE;
 
-    static final String GET_ALL_FAVORITE_CONTACTS =
+    static final String GET_ALL_FAVOURITE_CONTACTS =
             "SELECT * FROM " + DbConstants.CONTACTS_TABLE
-                    + " WHERE " + ContactsTable.IS_FAVORITE + " = " + Db.BOOLEAN_TRUE;
+                    + " WHERE " + ContactsTable.IS_FAVOURITE + " = " + Db.BOOLEAN_TRUE;
 
     static final String GET_CONTACT_BY_CONTACT_ID =
             "SELECT * FROM "

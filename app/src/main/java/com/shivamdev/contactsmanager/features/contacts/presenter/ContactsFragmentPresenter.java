@@ -16,6 +16,7 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by shivam on 1/2/17.
@@ -40,10 +41,11 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
     public void loadContactsFromApi() {
         checkViewAttached();
         getView().showLoader();
-        Subscription subs = //Observable.merge(contactsApi.getContacts(), dataStore.getAllContacts())
+        Subscription subs = //Observable.concat(, dataStore.getAllContacts())
                 contactsApi.getContacts()
-                        .doOnNext(this::saveContactsInDb)
                         //.filter(contactData -> contactData.size() > 0)
+                        .observeOn(Schedulers.computation())
+                        .doOnNext(this::saveContactsInDb)
                         .compose(RxUtils.applySchedulers())
                         .subscribe(new Subscriber<List<ContactData>>() {
                             @Override
@@ -59,21 +61,22 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
 
                             @Override
                             public void onNext(List<ContactData> contactData) {
-                                filterFavoriteContacts(contactData);
+                                filterFavouriteContacts(contactData);
                                 showContactsOnUi(contactData);
                             }
                         });
         addSubscription(subs);
     }
 
-    private void filterFavoriteContacts(List<ContactData> contactData) {
-        List<ContactData> favoriteList = new ArrayList<>();
+    private void filterFavouriteContacts(List<ContactData> contactData) {
+        List<ContactData> favouriteList = new ArrayList<>();
+        Collections.sort(contactData);
         for (ContactData contact : contactData) {
-            if (contact.isFavorite) {
-                favoriteList.add(contact);
+            if (contact.isFavourite) {
+                favouriteList.add(contact);
             }
         }
-        contactData.addAll(0, favoriteList);
+        contactData.addAll(0, favouriteList);
     }
 
     private void saveContactsInDb(List<ContactData> contactList) {
@@ -83,7 +86,6 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
     private void showContactsOnUi(List<ContactData> contactData) {
         checkViewAttached();
         if (contactData.size() > 0) {
-            Collections.sort(contactData);
             getView().updateContacts(contactData);
         } else {
             getView().noContactsFound();
@@ -111,6 +113,4 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
         });
         addSubscription(subs);
     }
-
-
 }

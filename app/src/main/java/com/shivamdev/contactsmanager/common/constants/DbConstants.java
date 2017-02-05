@@ -18,7 +18,7 @@ public interface DbConstants {
         String EMAIL = "email";
         String PHONE_NUMBER = "phone_number";
         String PROFILE_URL = "profile_pic";
-        String IS_FAVORITE = "favorite";
+        String IS_FAVOURITE = "favourite";
         String CREATED_AT = "created_at";
         String UPDATED_AT = "updated_at";
     }

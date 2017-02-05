@@ -65,10 +65,10 @@ public class ContactDetailsPresenter extends BasePresenter<ContactDetailsScreen>
             getView().showProfilePic(contact.profileUrl);
         }
 
-        if (contact.isFavorite) {
-            getView().setFavorite();
+        if (contact.isFavourite) {
+            getView().setFavourite();
         } else {
-            getView().resetFavorite();
+            getView().resetFavourite();
         }
 
         if (!StringUtils.isEmpty(contact.phoneNumber)) {
@@ -109,10 +109,10 @@ public class ContactDetailsPresenter extends BasePresenter<ContactDetailsScreen>
 
     }
 
-    public void updateFavorite(ContactData contact) {
+    public void updateFavourite(ContactData contact) {
         checkViewAttached();
-        getView().showFavoriteLoader();
-        contact.isFavorite = !contact.isFavorite;
+        getView().showFavouriteLoader();
+        contact.isFavourite = !contact.isFavourite;
         Subscription subs = contactsApi.updateContact(contact.id, contact)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(new Subscriber<ContactData>() {
@@ -123,15 +123,15 @@ public class ContactDetailsPresenter extends BasePresenter<ContactDetailsScreen>
 
                     @Override
                     public void onError(Throwable e) {
-                        getView().errorWhileUpdatingFavorite(e);
+                        getView().errorWhileUpdatingFavourite(e);
                     }
 
                     @Override
                     public void onNext(ContactData data) {
-                        if (data.isFavorite) {
-                            getView().setFavorite();
+                        if (data.isFavourite) {
+                            getView().setFavourite();
                         } else {
-                            getView().resetFavorite();
+                            getView().resetFavourite();
                         }
                         getView().hideLoader();
                     }

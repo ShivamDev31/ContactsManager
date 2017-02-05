@@ -22,7 +22,7 @@ public class Contact {
     public String email;
     public String phoneNumber;
     public String profileUrl;
-    public boolean isFavorite;
+    public boolean isFavourite;
     public String createdAt;
     public String updatedAt;
 
@@ -34,7 +34,7 @@ public class Contact {
         contact.email = Db.getString(cursor, ContactsTable.EMAIL);
         contact.phoneNumber = Db.getString(cursor, ContactsTable.PHONE_NUMBER);
         contact.profileUrl = Db.getString(cursor, ContactsTable.PROFILE_URL);
-        contact.isFavorite = Db.getBoolean(cursor, ContactsTable.IS_FAVORITE);
+        contact.isFavourite = Db.getBoolean(cursor, ContactsTable.IS_FAVOURITE);
         contact.createdAt = Db.getString(cursor, ContactsTable.CREATED_AT);
         contact.updatedAt = Db.getString(cursor, ContactsTable.UPDATED_AT);
         return null;
@@ -51,7 +51,7 @@ public class Contact {
             values.put(ContactsTable.PHONE_NUMBER, contact.phoneNumber);
             values.put(ContactsTable.EMAIL, contact.email);
             values.put(ContactsTable.PROFILE_URL, contact.profileUrl);
-            values.put(ContactsTable.IS_FAVORITE, contact.isFavorite);
+            values.put(ContactsTable.IS_FAVOURITE, contact.isFavourite);
             values.put(ContactsTable.CREATED_AT, contact.createdAt);
             values.put(ContactsTable.UPDATED_AT, contact.updatedAt);
         }
@@ -86,8 +86,8 @@ public class Contact {
             return this;
         }
 
-        public Builder setFavorite(int isFavorite) {
-            values.put(ContactsTable.IS_FAVORITE, isFavorite);
+        public Builder setFavourite(int isFavourite) {
+            values.put(ContactsTable.IS_FAVOURITE, isFavourite);
             return this;
         }
 
@@ -115,7 +115,7 @@ public class Contact {
                 ", email='" + email + '\'' +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", profileUrl='" + profileUrl + '\'' +
-                ", isFavorite=" + isFavorite +
+                ", isFavourite=" + isFavourite +
                 ", createdAt='" + createdAt + '\'' +
                 ", updatedAt='" + updatedAt + '\'' +
                 '}';

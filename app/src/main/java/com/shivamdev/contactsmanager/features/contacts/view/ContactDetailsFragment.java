@@ -56,8 +56,8 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
     @BindView(R.id.ll_email_address)
     LinearLayout llEmailAddress;
 
-    @BindView(R.id.iv_favorite)
-    ImageView ivFavorite;
+    @BindView(R.id.iv_favourite)
+    ImageView ivFavourite;
 
     @BindView(R.id.tv_contact_name)
     TextView tvContactName;
@@ -109,9 +109,9 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
         presenter.getContactDetailsFromServer(contactData.id);
     }
 
-    @OnClick(R.id.iv_favorite)
-    void favoriteClick() {
-        presenter.updateFavorite(updatedContactData);
+    @OnClick(R.id.iv_favourite)
+    void favouriteClick() {
+        presenter.updateFavourite(updatedContactData);
     }
 
     @AskPermission(Manifest.permission.CALL_PHONE)
@@ -152,13 +152,13 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
     }
 
     @Override
-    public void setFavorite() {
-        ivFavorite.setImageResource(R.drawable.ic_favorite_checked);
+    public void setFavourite() {
+        ivFavourite.setImageResource(R.drawable.ic_favourite_checked);
     }
 
     @Override
-    public void resetFavorite() {
-        ivFavorite.setImageResource(R.drawable.ic_favorite_unchecked);
+    public void resetFavourite() {
+        ivFavourite.setImageResource(R.drawable.ic_favourite_unchecked);
     }
 
     @Override
@@ -238,12 +238,12 @@ public class ContactDetailsFragment extends BaseFragment implements ContactDetai
     }
 
     @Override
-    public void errorWhileUpdatingFavorite(Throwable e) {
+    public void errorWhileUpdatingFavourite(Throwable e) {
         showSnack(getString(R.string.error_updating_favorite));
     }
 
     @Override
-    public void showFavoriteLoader() {
+    public void showFavouriteLoader() {
         showProgressDialog(getString(R.string.updating_favorite));
     }
 

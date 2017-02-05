@@ -15,9 +15,9 @@ public interface ContactDetailsScreen extends MvpView {
 
     void showProfilePic(String profileUrl);
 
-    void setFavorite();
+    void setFavourite();
 
-    void resetFavorite();
+    void resetFavourite();
 
     void showContactName(String contactName);
 
@@ -43,9 +43,9 @@ public interface ContactDetailsScreen extends MvpView {
 
     void hideLoader();
 
-    void errorWhileUpdatingFavorite(Throwable e);
+    void errorWhileUpdatingFavourite(Throwable e);
 
-    void showFavoriteLoader();
+    void showFavouriteLoader();
 
     void showShareContactDialog();
 }

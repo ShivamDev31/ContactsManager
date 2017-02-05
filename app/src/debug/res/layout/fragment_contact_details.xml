@@ -24,10 +24,10 @@
 
 
         <ImageView
-            android:id="@+id/iv_favorite"
+            android:id="@+id/iv_favourite"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/ic_favorite_unchecked" />
+            android:src="@drawable/ic_favourite_unchecked" />
 
         <TextView
             android:id="@+id/tv_contact_name"
