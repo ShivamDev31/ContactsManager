@@ -2,6 +2,7 @@ package com.shivamdev.contactsmanager.features.contacts.view;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -16,6 +17,7 @@ import com.shivamdev.contactsmanager.features.contacts.screen.ContactsFragmentSc
 import com.shivamdev.contactsmanager.features.contacts.view.adapter.ContactsAdapter;
 import com.shivamdev.contactsmanager.features.main.view.ContactsActivity;
 import com.shivamdev.contactsmanager.network.data.ContactData;
+import com.shivamdev.contactsmanager.utils.AndroidUtils;
 
 import java.util.List;
 
@@ -47,6 +49,9 @@ public class ContactsFragment extends BaseFragment implements ContactsFragmentSc
     @BindView(R.id.tv_contacts_error)
     TextView tvContactsError;
 
+    @BindView(R.id.fab_add_contact)
+    FloatingActionButton fabAddContact;
+
     private ContactsAdapter adapter;
 
     public static ContactsFragment newInstance() {
@@ -70,7 +75,11 @@ public class ContactsFragment extends BaseFragment implements ContactsFragmentSc
         presenter.attachView(this);
         setupRecyclerView();
         setupSwipeRefresh();
-        presenter.loadContactsFromApi();
+        if (new AndroidUtils(context).isNetworkConnected()) {
+            presenter.loadContactsFromApi();
+        } else {
+            presenter.loadContactsFromDatabase();
+        }
         setupContactClicked();
     }
 

@@ -1,6 +1,8 @@
 package com.shivamdev.contactsmanager.db;
 
 
+import android.database.sqlite.SQLiteDatabase;
+
 import com.shivamdev.contactsmanager.common.constants.DbConstants;
 import com.shivamdev.contactsmanager.network.data.ContactData;
 import com.squareup.sqlbrite.BriteDatabase;
@@ -22,13 +24,15 @@ public class LocalDataStore {
     }
 
     public void insertAllContactsIntoDb(List<ContactData> contactsList) {
+        db.delete(DbConstants.CONTACTS_TABLE, null);
         for (ContactData contact : contactsList) {
             createContact(contact);
         }
     }
 
     public void createContact(ContactData contact) {
-        if (db.insert(DbConstants.CONTACTS_TABLE, new ContactData.Builder(contact).build()) > 0) {
+        if (db.insert(DbConstants.CONTACTS_TABLE, new ContactData.Builder(contact).build(),
+                SQLiteDatabase.CONFLICT_REPLACE) > 0) {
             return;
         }
 

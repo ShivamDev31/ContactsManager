@@ -28,6 +28,4 @@ public interface AddContactScreen extends MvpView {
 
     void contactSavedSuccessfully();
 
-    void showImageError();
-
 }

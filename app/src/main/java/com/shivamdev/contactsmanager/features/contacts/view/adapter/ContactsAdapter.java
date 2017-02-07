@@ -67,6 +67,8 @@ public class ContactsAdapter extends RecyclerView.Adapter<ContactsAdapter.Contac
                 holder.tvContactTitle.setText(title);
             }
         }
+
+
         String name = contact.firstName + " " + contact.lastName;
         holder.tvName.setText(name);
 

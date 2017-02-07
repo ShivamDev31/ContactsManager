@@ -44,6 +44,7 @@ public class ContactDetailsPresenter extends BasePresenter<ContactDetailsScreen>
 
                     @Override
                     public void onError(Throwable e) {
+                        getView().hideLoader();
                         getView().showError(e);
                     }
 
@@ -84,7 +85,8 @@ public class ContactDetailsPresenter extends BasePresenter<ContactDetailsScreen>
         }
     }
 
-    public void callNumber(String phoneNumber) {
+    public void
+    callNumber(String phoneNumber) {
         if (CommonUtils.isPhoneNumberValid(phoneNumber)) {
             getView().dialPhoneNumber(phoneNumber);
         } else {
@@ -123,6 +125,7 @@ public class ContactDetailsPresenter extends BasePresenter<ContactDetailsScreen>
 
                     @Override
                     public void onError(Throwable e) {
+                        getView().hideLoader();
                         getView().errorWhileUpdatingFavourite(e);
                     }
 

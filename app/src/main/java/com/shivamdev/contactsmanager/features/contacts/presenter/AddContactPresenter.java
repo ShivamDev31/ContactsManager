@@ -1,7 +1,6 @@
 package com.shivamdev.contactsmanager.features.contacts.presenter;
 
 import com.shivamdev.contactsmanager.common.mvp.BasePresenter;
-import com.shivamdev.contactsmanager.db.LocalDataStore;
 import com.shivamdev.contactsmanager.features.contacts.screen.AddContactScreen;
 import com.shivamdev.contactsmanager.network.api.ContactsApi;
 import com.shivamdev.contactsmanager.network.data.ContactData;
@@ -9,13 +8,8 @@ import com.shivamdev.contactsmanager.utils.CommonUtils;
 import com.shivamdev.contactsmanager.utils.RxUtils;
 import com.shivamdev.contactsmanager.utils.StringUtils;
 
-import java.io.File;
-
 import javax.inject.Inject;
 
-import okhttp3.MediaType;
-import okhttp3.MultipartBody;
-import okhttp3.RequestBody;
 import rx.Subscriber;
 import rx.Subscription;
 
@@ -23,19 +17,17 @@ import rx.Subscription;
  * Created by shivam on 3/2/17.
  */
 
-public class AddContactPresenter extends BasePresenter<AddContactScreen> {
+public class    AddContactPresenter extends BasePresenter<AddContactScreen> {
 
     private ContactsApi contactsApi;
-    private LocalDataStore dataStore;
 
     @Inject
-    AddContactPresenter(ContactsApi contactsApi, LocalDataStore dataStore) {
+    AddContactPresenter(ContactsApi contactsApi) {
         this.contactsApi = contactsApi;
-        this.dataStore = dataStore;
     }
 
 
-    public void saveContact(File image, ContactData contact) {
+    public void saveContact(ContactData contact) {
         if (StringUtils.isEmpty(contact.firstName)) {
             getView().showFirstNameEmptyError();
             return;
@@ -43,6 +35,11 @@ public class AddContactPresenter extends BasePresenter<AddContactScreen> {
 
         if (contact.firstName.length() < 3) {
             getView().showFirstNameLessThanThreeError();
+            return;
+        }
+
+        if (StringUtils.isEmpty(contact.lastName)) {
+            getView().showLastNameEmptyError();
             return;
         }
 
@@ -61,25 +58,12 @@ public class AddContactPresenter extends BasePresenter<AddContactScreen> {
             return;
         }
 
-        if (image == null) {
-            getView().showImageError();
-            return;
-        }
-
-        saveContactOnServer(image, contact);
+        saveContactOnServer(contact);
     }
 
-    private void saveContactOnServer(File image, ContactData contact) {
+    private void saveContactOnServer(ContactData contact) {
         checkViewAttached();
         getView().showLoader();
-        RequestBody profileImage = RequestBody.create(MediaType.parse("image/*"), image);
-        RequestBody firstName = getRequestBody(contact.firstName);
-        RequestBody lastName = getRequestBody(contact.lastName);
-        RequestBody email = getRequestBody(contact.email);
-        RequestBody mobile = getRequestBody(contact.phoneNumber);
-        MultipartBody.Part imageBody =
-                MultipartBody.Part.createFormData("profile_pic", image.getName(), profileImage);
-        //Subscription subs = contactsApi.postContact(firstName, lastName, email, mobile)//, imageBody)
         Subscription subs = contactsApi.newContact(contact)
                 .compose(RxUtils.applySchedulers())
                 .subscribe(new Subscriber<Void>() {
@@ -101,10 +85,5 @@ public class AddContactPresenter extends BasePresenter<AddContactScreen> {
                     }
                 });
         addSubscription(subs);
-    }
-
-    private RequestBody getRequestBody(String content) {
-        return RequestBody.create(
-                MediaType.parse("application/json"), content);
     }
 }

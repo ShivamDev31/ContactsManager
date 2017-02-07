@@ -5,6 +5,7 @@ import android.content.Context;
 
 import com.shivamdev.contactsmanager.data.DataManager;
 import com.shivamdev.contactsmanager.data.remote.MvpStarterService;
+import com.shivamdev.contactsmanager.di.module.NetworkModule;
 import com.shivamdev.contactsmanager.di.scope.ApplicationContext;
 
 import javax.inject.Singleton;
@@ -18,7 +19,7 @@ import static org.mockito.Mockito.mock;
  * Provides application-level dependencies for an app running on a testing environment
  * This allows injecting mocks if necessary.
  */
-@Module
+@Module(includes = {NetworkModule.class})
 public class AppTestModule {
     private final Application mApplication;
 

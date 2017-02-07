@@ -26,9 +26,9 @@ public class TestComponentRule implements TestRule {
         mContext = context;
         ContactsApplication application = ContactsApplication.getInstance();
         mTestComponent = null;
-                //DaggerTestComponent.builder()
-                //.applicationTestModule(new AppTestModule(application))
-                //.build();
+                /*DaggerTestComponent.builder()
+                .appTestModule(new AppTestModule(application))
+                .build();*/
     }
 
     public TestComponent getTestComponent() {

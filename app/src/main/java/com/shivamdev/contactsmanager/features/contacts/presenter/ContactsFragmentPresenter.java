@@ -16,7 +16,6 @@ import javax.inject.Inject;
 import rx.Observable;
 import rx.Subscriber;
 import rx.Subscription;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by shivam on 1/2/17.
@@ -41,11 +40,9 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
     public void loadContactsFromApi() {
         checkViewAttached();
         getView().showLoader();
-        Subscription subs = //Observable.concat(, dataStore.getAllContacts())
+        Subscription subs = //Observable.merge(dataStore.getAllContacts(), contactsApi.getContacts())
                 contactsApi.getContacts()
-                        //.filter(contactData -> contactData.size() > 0)
-                        .observeOn(Schedulers.computation())
-                        .doOnNext(this::saveContactsInDb)
+                        .doOnNext(this::saveContactsIntoDb)
                         .compose(RxUtils.applySchedulers())
                         .subscribe(new Subscriber<List<ContactData>>() {
                             @Override
@@ -68,6 +65,10 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
         addSubscription(subs);
     }
 
+    private void saveContactsIntoDb(List<ContactData> contactList) {
+        dataStore.insertAllContactsIntoDb(contactList);
+    }
+
     private void filterFavouriteContacts(List<ContactData> contactData) {
         List<ContactData> favouriteList = new ArrayList<>();
         Collections.sort(contactData);
@@ -77,10 +78,6 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
             }
         }
         contactData.addAll(0, favouriteList);
-    }
-
-    private void saveContactsInDb(List<ContactData> contactList) {
-        dataStore.insertAllContactsIntoDb(contactList);
     }
 
     private void showContactsOnUi(List<ContactData> contactData) {
@@ -103,7 +100,7 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
 
             @Override
             public void onError(Throwable e) {
-
+                getView().showError(e);
             }
 
             @Override
@@ -111,6 +108,32 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
                 getView().loadContactDetailsFragment(contactData);
             }
         });
+        addSubscription(subs);
+    }
+
+    public void loadContactsFromDatabase() {
+        checkViewAttached();
+        getView().showLoader();
+        Subscription subs = dataStore.getAllContacts()
+                .compose(RxUtils.applySchedulers())
+                .subscribe(new Subscriber<List<ContactData>>() {
+                    @Override
+                    public void onCompleted() {
+
+                    }
+
+                    @Override
+                    public void onError(Throwable e) {
+                        getView().hideLoader();
+                        getView().showError(e);
+                    }
+
+                    @Override
+                    public void onNext(List<ContactData> contactData) {
+                        filterFavouriteContacts(contactData);
+                        showContactsOnUi(contactData);
+                    }
+                });
         addSubscription(subs);
     }
 }

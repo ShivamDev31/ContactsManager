@@ -4,7 +4,6 @@ import android.Manifest;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Intent;
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -29,8 +28,6 @@ import com.shivamdev.contactsmanager.features.contacts.screen.AddContactScreen;
 import com.shivamdev.contactsmanager.features.main.view.ContactsActivity;
 import com.shivamdev.contactsmanager.network.data.ContactData;
 import com.shivamdev.contactsmanager.utils.AndroidUtils;
-
-import java.io.File;
 
 import javax.inject.Inject;
 
@@ -106,22 +103,7 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
         contactData.lastName = lastName;
         contactData.phoneNumber = phoneNumber;
         contactData.email = email;
-        if (displayPicUri != null) {
-            File file = new File(getPathFromUri(displayPicUri));
-
-            presenter.saveContact(file, contactData);
-        } else {
-            showSnack(getString(R.string.error_no_image_selected));
-        }
-
-    }
-
-    public String getPathFromUri(Uri uri) {
-        String[] projection = {MediaStore.Images.Media.DATA};
-        Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-        int columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-        cursor.moveToFirst();
-        return cursor.getString(columnIndex);
+        presenter.saveContact(contactData);
     }
 
     @Override
@@ -181,11 +163,6 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
         showSnack(getString(R.string.contact_posted_successfully));
         ContactsActivity activity = (ContactsActivity) getActivity();
         activity.popBackStackImmediate();
-    }
-
-    @Override
-    public void showImageError() {
-        showSnack(getString(R.string.error_image_not_found));
     }
 
     @TargetApi(Build.VERSION_CODES.JELLY_BEAN)
