@@ -8,6 +8,8 @@ import dagger.Module;
 import dagger.Provides;
 import retrofit2.Retrofit;
 
+import static org.mockito.Mockito.mock;
+
 /**
  * Created by shivam on 8/2/17.
  */
@@ -16,7 +18,7 @@ import retrofit2.Retrofit;
 public class TestApiModule {
     @Singleton
     @Provides
-    ContactsApi contactsApi(Retrofit retrofit) {
-        return retrofit.create(ContactsApi.class);
+    ContactsApi contactsApi() {
+        return mock(ContactsApi.class);
     }
 }

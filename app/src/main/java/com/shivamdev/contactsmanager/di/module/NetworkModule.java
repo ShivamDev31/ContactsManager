@@ -2,7 +2,6 @@ package com.shivamdev.contactsmanager.di.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.shivamdev.contactsmanager.common.constants.Constants;
 
 import javax.inject.Singleton;
 
@@ -21,11 +20,16 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NetworkModule {
 
+
+    public String getBaseUrl() {
+        return "http://gojek-contacts-app.herokuapp.com/";
+    }
+
     @Singleton
     @Provides
     Retrofit provideRetrofit(OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
-                .baseUrl(Constants.Urls.BASE_URL)
+                .baseUrl(getBaseUrl())
                 .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
