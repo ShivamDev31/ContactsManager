@@ -21,7 +21,6 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class TestNetworkModule {
 
-
     @Singleton
     @Provides
     Retrofit provideRetrofit(OkHttpClient client, Gson gson) {

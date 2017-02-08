@@ -24,7 +24,6 @@ android {
         targetSdkVersion config.targetSdkVersion
         versionCode config.versionCode
         versionName config.versionName
-        //testInstrumentationRunner 'io.appflate.restmock.android.RESTMockTestRunner'
         testInstrumentationRunner "com.shivamdev.contactsmanager.runner.DemoTestRunner"
         //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true

@@ -5,9 +5,6 @@ import android.content.Context;
 
 import com.shivamdev.contactsmanager.TestApplication;
 
-import io.appflate.restmock.RESTMockServerStarter;
-import io.appflate.restmock.android.AndroidAssetsFileParser;
-import io.appflate.restmock.android.AndroidLogger;
 import io.appflate.restmock.android.RESTMockTestRunner;
 
 /**
@@ -19,7 +16,7 @@ public class DemoTestRunner extends RESTMockTestRunner {
     @Override
     public Application newApplication(ClassLoader cl, String className, Context context)
             throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        RESTMockServerStarter.startSync(new AndroidAssetsFileParser(getContext()), new AndroidLogger());
+        //RESTMockServerStarter.startSync(new AndroidAssetsFileParser(getContext()), new AndroidLogger());
         return super.newApplication(cl, TestApplication.class.getName(), context);
     }
 }

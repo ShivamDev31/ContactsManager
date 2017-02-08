@@ -62,9 +62,6 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
     @BindView(R.id.et_email_address)
     EditText etEmailAddress;
 
-    private Uri displayPicUri;
-
-
     public static AddContactFragment newInstance() {
         return new AddContactFragment();
     }
@@ -72,7 +69,6 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
     @Override
     protected void injectComponent() {
         ContactsApplication.getInstance().getComponent().inject(this);
-        //fragmentComponent().inject(this);
     }
 
     @Override
@@ -235,7 +231,6 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
     }
 
     private void setProfileImage(Uri uri) {
-        displayPicUri = uri;
         new AndroidUtils(context).loadLocalProfileImageWithGlide(uri, ivProfilePic);
 
     }

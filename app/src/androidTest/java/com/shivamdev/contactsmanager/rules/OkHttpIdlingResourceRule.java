@@ -27,6 +27,7 @@ public class OkHttpIdlingResourceRule implements TestRule {
 
     public OkHttpIdlingResourceRule() {
         ContactsApplication contactsApplication = ContactsApplication.getInstance();
+        //TestApplication testApplication = (TestApplication) contactsApplication;
         TestAppComponent testComponent = (TestAppComponent) contactsApplication.getComponent();
         testComponent.inject(this);
     }

@@ -1,7 +1,6 @@
 package com.shivamdev.contactsmanager.features.contacts.view;
 
-import android.content.res.Resources;
-import android.support.test.InstrumentationRegistry;
+import android.content.Intent;
 import android.support.test.rule.ActivityTestRule;
 import android.support.test.runner.AndroidJUnit4;
 
@@ -28,10 +27,9 @@ import static io.appflate.restmock.utils.RequestMatchers.pathEndsWith;
 @RunWith(AndroidJUnit4.class)
 public class AddContactFragmentTest {
 
-    private Resources resources;
 
     @Rule
-    OkHttpIdlingResourceRule okHttpIdlingResourceRule = new OkHttpIdlingResourceRule();
+    public OkHttpIdlingResourceRule okHttpIdlingResourceRule = new OkHttpIdlingResourceRule();
 
     @Rule
     public ActivityTestRule<ContactsActivity> activityTestRule =
@@ -41,7 +39,6 @@ public class AddContactFragmentTest {
     @Before
     public void setUp() throws Exception {
         RESTMockServer.reset();
-        resources = InstrumentationRegistry.getContext().getResources();
     }
 
     @Test
@@ -50,7 +47,7 @@ public class AddContactFragmentTest {
         RESTMockServer.whenGET(pathEndsWith("contacts.json"))
                 .thenReturnFile("contacts.json");
 
-        activityTestRule.launchActivity(null);
+        activityTestRule.launchActivity(new Intent());
 
         onView(withText("Amitabh")).perform(click());
 
