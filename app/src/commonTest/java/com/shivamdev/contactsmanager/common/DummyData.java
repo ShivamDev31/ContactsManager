@@ -38,4 +38,13 @@ public class DummyData {
         return contactsList;
     }
 
+    public static final String SINGLE_CONTACT_LIST_JSON = "[\n" +
+            "  {\n" +
+            "    \"id\": 111,\n" +
+            "    \"first_name\": \"kkh\",\n" +
+            "    \"last_name\": \"vvh\",\n" +
+            "    \"profile_pic\": \"https://contacts-app.s3-ap-southeast-1.amazonaws.com/contacts/profile_pics/000/000/111/original/missing.png?1486226912\",\n" +
+            "    \"url\": \"http://gojek-contacts-app.herokuapp.com/contacts/111.json\"\n" +
+            "  }";
+
 }

@@ -7,7 +7,6 @@ import com.shivamdev.contactsmanager.BuildConfig;
 import com.shivamdev.contactsmanager.di.component.AppComponent;
 import com.shivamdev.contactsmanager.di.component.DaggerAppComponent;
 import com.shivamdev.contactsmanager.di.module.AppModule;
-import com.squareup.leakcanary.LeakCanary;
 
 import timber.log.Timber;
 
@@ -32,7 +31,6 @@ public class ContactsApplication extends Application {
         if (BuildConfig.DEBUG) {
             setupTimber();
             setupStetho();
-            setupLeakCanary();
         }
     }
 
@@ -51,10 +49,6 @@ public class ContactsApplication extends Application {
 
     private void setupTimber() {
         Timber.plant(new Timber.DebugTree());
-    }
-
-    private void setupLeakCanary() {
-        LeakCanary.install(this);
     }
 
     public AppComponent getComponent() {

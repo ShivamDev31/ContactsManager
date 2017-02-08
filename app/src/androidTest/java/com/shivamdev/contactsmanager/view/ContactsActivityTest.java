@@ -32,16 +32,16 @@ public class ContactsActivityTest {
 
     @Rule
     public ActivityTestRule<ContactsActivity> activityTestRule
-            = new ActivityTestRule<>(ContactsActivity.class, true, false);
+            = new ActivityTestRule<>(ContactsActivity.class, false, false);
 
 
     @Before
     public void setUp() throws Exception {
+        RESTMockServer.reset();
     }
 
     @Test
     public void contactsActivityTest() {
-        RESTMockServer.reset();
         RESTMockServer.whenGET(pathEndsWith("contacts.json")).thenReturnFile("contacts.json");
         activityTestRule.launchActivity(null);
         ViewInteraction floatingActionButton = onView(

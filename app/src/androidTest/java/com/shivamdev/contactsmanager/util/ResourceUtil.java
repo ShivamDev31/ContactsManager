@@ -1,6 +1,6 @@
 package com.shivamdev.contactsmanager.util;
 
-import android.content.res.Resources;
+import android.content.Context;
 import android.support.test.InstrumentationRegistry;
 
 /**
@@ -9,10 +9,10 @@ import android.support.test.InstrumentationRegistry;
 
 public class ResourceUtil {
 
-    private static Resources resources = InstrumentationRegistry.getContext().getResources();
 
-    public static String getString(int string) {
-        return resources.getString(string);
+    public static String getString(int stringId) {
+        Context targetContext = InstrumentationRegistry.getTargetContext();
+        return targetContext.getResources().getString(stringId);
     }
 
 }

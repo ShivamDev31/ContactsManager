@@ -37,7 +37,7 @@ public interface ContactsApi {
                                  @Part("phone_number") RequestBody phoneNumber,
                                  @Part MultipartBody.Part file);
 
-    @POST(Constants.Urls.UPDATE_CONTACT)
+    @POST(Constants.Urls.POST_NEW_CONTACT)
     Observable<Void> newContact(@Body ContactData contact);
 
     @PUT(Constants.Urls.UPDATE_CONTACT)
