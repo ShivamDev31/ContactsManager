@@ -1,5 +1,6 @@
 package com.shivamdev.contactsmanager.features.contacts.presenter;
 
+import com.shivamdev.contactsmanager.db.LocalDataStore;
 import com.shivamdev.contactsmanager.features.contacts.screen.AddContactScreen;
 import com.shivamdev.contactsmanager.network.api.ContactsApi;
 import com.shivamdev.contactsmanager.network.data.ContactData;
@@ -33,6 +34,9 @@ public class AddContactPresenterTest {
     @Mock
     private ContactsApi contactsApi;
 
+    @Mock
+    private LocalDataStore dataStore;
+
     private AddContactPresenter presenter;
     @Mock
     private AddContactScreen screen;
@@ -42,7 +46,7 @@ public class AddContactPresenterTest {
 
     @Before
     public void setUp() throws Exception {
-        presenter = new AddContactPresenter(contactsApi);
+        presenter = new AddContactPresenter(contactsApi, dataStore);
         presenter.attachView(screen);
     }
 
@@ -95,6 +99,7 @@ public class AddContactPresenterTest {
         presenter.saveContact(contactData);
         verify(screen).showLoader();
         verify(screen).hideLoader();
+        verify(dataStore).createContact(contactData);
         verify(screen).contactSavedSuccessfully();
     }
 

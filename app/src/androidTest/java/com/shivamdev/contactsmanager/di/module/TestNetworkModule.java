@@ -2,12 +2,12 @@ package com.shivamdev.contactsmanager.di.module;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.shivamdev.contactsmanager.common.constants.Constants;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
+import io.appflate.restmock.RESTMockServer;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -15,17 +15,18 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
- * Created by shivam on 1/2/17.
+ * Created by shivam on 8/2/17.
  */
 
 @Module
-public class NetworkModule {
+public class TestNetworkModule {
+
 
     @Singleton
     @Provides
     Retrofit provideRetrofit(OkHttpClient client, Gson gson) {
         return new Retrofit.Builder()
-                .baseUrl(Constants.Urls.BASE_URL)
+                .baseUrl(RESTMockServer.getUrl())
                 .client(client)
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .addConverterFactory(GsonConverterFactory.create(gson))
@@ -55,3 +56,4 @@ public class NetworkModule {
     }
 
 }
+

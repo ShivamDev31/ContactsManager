@@ -65,7 +65,6 @@ public class ContactsFragment extends BaseFragment implements ContactsFragmentSc
 
     @Override
     protected void injectComponent() {
-        //fragmentComponent().inject(this);
         ContactsApplication.getInstance().getComponent().inject(this);
     }
 

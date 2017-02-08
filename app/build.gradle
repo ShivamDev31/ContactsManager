@@ -24,8 +24,9 @@ android {
         targetSdkVersion config.targetSdkVersion
         versionCode config.versionCode
         versionName config.versionName
-        //testInstrumentationRunner "com.shivamdev.contactsmanager.runner.RxAndroidJUnitRunner"
-        testInstrumentationRunner "${applicationId}.runner.RxAndroidJUnitRunner"
+        //testInstrumentationRunner 'io.appflate.restmock.android.RESTMockTestRunner'
+        testInstrumentationRunner "com.shivamdev.contactsmanager.runner.DemoTestRunner"
+        //testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
 
@@ -147,6 +148,9 @@ dependencies {
     testCompile "org.hamcrest:hamcrest-library:${testing.hamcrest}"
     testCompile "org.hamcrest:hamcrest-integration:${testing.hamcrest}"
     testCompile "org.robolectric:robolectric:${testing.roboelectric}"
+
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:${testing.dagger}"
+    androidTestAnnotationProcessor "com.google.dagger:dagger-compiler:${testing.dagger}"
 }
 
 // Log out test results to console

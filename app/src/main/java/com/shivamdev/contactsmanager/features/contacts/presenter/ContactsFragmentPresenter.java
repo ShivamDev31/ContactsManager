@@ -40,28 +40,27 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
     public void loadContactsFromApi() {
         checkViewAttached();
         getView().showLoader();
-        Subscription subs = //Observable.merge(dataStore.getAllContacts(), contactsApi.getContacts())
-                contactsApi.getContacts()
-                        .doOnNext(this::saveContactsIntoDb)
-                        .compose(RxUtils.applySchedulers())
-                        .subscribe(new Subscriber<List<ContactData>>() {
-                            @Override
-                            public void onCompleted() {
+        Subscription subs = contactsApi.getContacts()
+                .doOnNext(this::saveContactsIntoDb)
+                .compose(RxUtils.applySchedulers())
+                .subscribe(new Subscriber<List<ContactData>>() {
+                    @Override
+                    public void onCompleted() {
 
-                            }
+                    }
 
-                            @Override
-                            public void onError(Throwable e) {
-                                getView().showError(e);
-                                getView().hideLoader();
-                            }
+                    @Override
+                    public void onError(Throwable e) {
+                        getView().showError(e);
+                        getView().hideLoader();
+                    }
 
-                            @Override
-                            public void onNext(List<ContactData> contactData) {
-                                filterFavouriteContacts(contactData);
-                                showContactsOnUi(contactData);
-                            }
-                        });
+                    @Override
+                    public void onNext(List<ContactData> contactData) {
+                        filterFavouriteContacts(contactData);
+                        showContactsOnUi(contactData);
+                    }
+                });
         addSubscription(subs);
     }
 

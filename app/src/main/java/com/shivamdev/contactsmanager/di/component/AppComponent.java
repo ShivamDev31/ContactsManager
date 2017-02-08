@@ -3,15 +3,13 @@ package com.shivamdev.contactsmanager.di.component;
 import android.app.Application;
 import android.content.Context;
 
-import com.shivamdev.contactsmanager.data.DataManager;
-import com.shivamdev.contactsmanager.data.remote.MvpStarterService;
+import com.shivamdev.contactsmanager.di.module.ApiModule;
 import com.shivamdev.contactsmanager.di.module.AppModule;
 import com.shivamdev.contactsmanager.di.module.DataModule;
 import com.shivamdev.contactsmanager.di.scope.ApplicationContext;
 import com.shivamdev.contactsmanager.features.contacts.view.AddContactFragment;
 import com.shivamdev.contactsmanager.features.contacts.view.ContactDetailsFragment;
 import com.shivamdev.contactsmanager.features.contacts.view.ContactsFragment;
-import com.shivamdev.contactsmanager.di.module.ApiModule;
 
 import javax.inject.Singleton;
 
@@ -29,10 +27,6 @@ public interface AppComponent {
     Context context();
 
     Application application();
-
-    DataManager dataManager();
-
-    MvpStarterService mvpBoilerplateService();
 
     void inject(ContactsFragment fragment);
 

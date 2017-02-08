@@ -5,22 +5,26 @@ import android.content.Context;
 
 import com.shivamdev.contactsmanager.di.scope.ApplicationContext;
 
+import javax.inject.Singleton;
+
 import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by shivam on 2/2/17.
+ * Created by shivam on 7/2/17.
  */
 
 @Module
-public class AppModule {
+public class TestAppModule {
+
     private final Application mApplication;
 
-    public AppModule(Application application) {
+    public TestAppModule(Application application) {
         mApplication = application;
     }
 
     @Provides
+    @Singleton
     Application provideApplication() {
         return mApplication;
     }

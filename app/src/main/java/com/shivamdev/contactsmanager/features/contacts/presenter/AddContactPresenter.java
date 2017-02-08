@@ -1,6 +1,7 @@
 package com.shivamdev.contactsmanager.features.contacts.presenter;
 
 import com.shivamdev.contactsmanager.common.mvp.BasePresenter;
+import com.shivamdev.contactsmanager.db.LocalDataStore;
 import com.shivamdev.contactsmanager.features.contacts.screen.AddContactScreen;
 import com.shivamdev.contactsmanager.network.api.ContactsApi;
 import com.shivamdev.contactsmanager.network.data.ContactData;
@@ -17,13 +18,15 @@ import rx.Subscription;
  * Created by shivam on 3/2/17.
  */
 
-public class    AddContactPresenter extends BasePresenter<AddContactScreen> {
+public class AddContactPresenter extends BasePresenter<AddContactScreen> {
 
     private ContactsApi contactsApi;
+    private LocalDataStore dataStore;
 
     @Inject
-    AddContactPresenter(ContactsApi contactsApi) {
+    AddContactPresenter(ContactsApi contactsApi, LocalDataStore dataStore) {
         this.contactsApi = contactsApi;
+        this.dataStore = dataStore;
     }
 
 
@@ -65,6 +68,7 @@ public class    AddContactPresenter extends BasePresenter<AddContactScreen> {
         checkViewAttached();
         getView().showLoader();
         Subscription subs = contactsApi.newContact(contact)
+                .doOnNext(aVoid -> dataStore.createContact(contact))
                 .compose(RxUtils.applySchedulers())
                 .subscribe(new Subscriber<Void>() {
                     @Override

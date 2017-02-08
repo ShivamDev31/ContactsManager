@@ -18,7 +18,7 @@ import rx.schedulers.Schedulers;
  * Created by shivam on 3/2/17.
  */
 
-@Module(includes = {})
+@Module
 public class DataModule {
 
     @Provides
