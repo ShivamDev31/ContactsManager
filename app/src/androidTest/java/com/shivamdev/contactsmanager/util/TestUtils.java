@@ -9,6 +9,7 @@ import android.support.test.espresso.util.HumanReadables;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.shivamdev.contactsmanager.matchers.DrawableMatcher;
 import com.shivamdev.contactsmanager.matchers.RecyclerViewMatcher;
 
 import org.hamcrest.Matcher;
@@ -20,18 +21,13 @@ import org.hamcrest.Matchers;
 
 public class TestUtils {
 
-    public static <VH extends RecyclerView.ViewHolder> ViewAction actionOnItemViewAtPosition(int position,
-                                                                                             @IdRes
-                                                                                                     int viewId,
-                                                                                             ViewAction viewAction) {
+    public static <VH extends RecyclerView.ViewHolder> ViewAction
+    actionOnItemViewAtPosition(int position, @IdRes int viewId, ViewAction viewAction) {
         return new ActionOnItemViewAtPositionViewAction(position, viewId, viewAction);
     }
 
-    private static final class ActionOnItemViewAtPositionViewAction<VH extends RecyclerView
-            .ViewHolder>
-            implements
-
-            ViewAction {
+    private static final class ActionOnItemViewAtPositionViewAction
+            <VH extends RecyclerView.ViewHolder> implements ViewAction {
         private final int position;
         private final ViewAction viewAction;
         private final int viewId;
@@ -107,6 +103,14 @@ public class TestUtils {
 
     public static RecyclerViewMatcher withRecyclerView(final int recyclerViewId) {
         return new RecyclerViewMatcher(recyclerViewId);
+    }
+
+    public static Matcher<View> withDrawable(final int resourceId) {
+        return new DrawableMatcher(resourceId);
+    }
+
+    public static Matcher<View> noDrawable() {
+        return new DrawableMatcher(-1);
     }
 
 }

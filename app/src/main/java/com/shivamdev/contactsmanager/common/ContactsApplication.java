@@ -54,9 +54,4 @@ public class ContactsApplication extends Application {
     public AppComponent getComponent() {
         return appComponent;
     }
-
-    // Needed to replace the component with a test specific one
-    public void setComponent(AppComponent applicationComponent) {
-        this.appComponent = applicationComponent;
-    }
 }
