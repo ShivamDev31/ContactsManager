@@ -12,12 +12,16 @@ import android.widget.TextView;
 import com.shivamdev.contactsmanager.R;
 import com.shivamdev.contactsmanager.common.ContactsApplication;
 import com.shivamdev.contactsmanager.common.base.BaseFragment;
+import com.shivamdev.contactsmanager.common.events.ContactAddedEvent;
 import com.shivamdev.contactsmanager.features.contacts.presenter.ContactsFragmentPresenter;
 import com.shivamdev.contactsmanager.features.contacts.screen.ContactsFragmentScreen;
 import com.shivamdev.contactsmanager.features.contacts.view.adapter.ContactsAdapter;
 import com.shivamdev.contactsmanager.features.main.view.ContactsActivity;
 import com.shivamdev.contactsmanager.network.data.ContactData;
 import com.shivamdev.contactsmanager.utils.AndroidUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.List;
 
@@ -156,8 +160,24 @@ public class ContactsFragment extends BaseFragment implements ContactsFragmentSc
         activity.replaceFragment(contactDetailsFragment, TAG);
     }
 
+    @Subscribe
+    public void onContactAddedEvent(ContactAddedEvent event) {
+        presenter.loadContactsFromDatabase();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
+    }
+
     @Override
     public void onDestroyView() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         super.onDestroyView();
         presenter.detachView();
     }

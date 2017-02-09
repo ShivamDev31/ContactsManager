@@ -23,11 +23,14 @@ import com.shivamdev.contactsmanager.R;
 import com.shivamdev.contactsmanager.common.ContactsApplication;
 import com.shivamdev.contactsmanager.common.base.BaseFragment;
 import com.shivamdev.contactsmanager.common.constants.Constants;
+import com.shivamdev.contactsmanager.common.events.ContactAddedEvent;
 import com.shivamdev.contactsmanager.features.contacts.presenter.AddContactPresenter;
 import com.shivamdev.contactsmanager.features.contacts.screen.AddContactScreen;
 import com.shivamdev.contactsmanager.features.main.view.ContactsActivity;
 import com.shivamdev.contactsmanager.network.data.ContactData;
 import com.shivamdev.contactsmanager.utils.AndroidUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import javax.inject.Inject;
 
@@ -156,6 +159,7 @@ public class AddContactFragment extends BaseFragment implements AddContactScreen
 
     @Override
     public void contactSavedSuccessfully() {
+        EventBus.getDefault().post(new ContactAddedEvent());
         showSnack(getString(R.string.contact_posted_successfully));
         ContactsActivity activity = (ContactsActivity) getActivity();
         activity.popBackStackImmediate();
