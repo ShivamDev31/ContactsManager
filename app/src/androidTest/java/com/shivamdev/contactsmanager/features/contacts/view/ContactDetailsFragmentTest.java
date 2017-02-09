@@ -147,7 +147,7 @@ public class ContactDetailsFragmentTest {
         RESTMockServer.whenGET(pathEndsWith("111.json"))
                 .thenReturnFile(200, "contacts/" + jsonFile + ".json");
 
-        RESTMockServer.whenPOST(pathEndsWith("111.json"))
+        RESTMockServer.whenPUT(pathEndsWith("111.json"))
                 .thenReturnFile(200,
                         isFavourite ? "contacts/contact_details_favourite_disabled.json" :
                                 "contacts/contact_details_favourite_enabled.json");
