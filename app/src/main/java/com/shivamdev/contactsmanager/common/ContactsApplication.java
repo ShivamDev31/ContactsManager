@@ -44,7 +44,6 @@ public class ContactsApplication extends Application {
 
     private void setupStetho() {
         Stetho.initializeWithDefaults(this);
-
     }
 
     private void setupTimber() {
