@@ -4,7 +4,6 @@ import com.shivamdev.contactsmanager.common.base.BaseActivity;
 import com.shivamdev.contactsmanager.common.base.BaseFragment;
 import com.shivamdev.contactsmanager.di.scope.ConfigPersistent;
 import com.shivamdev.contactsmanager.di.module.ActivityModule;
-import com.shivamdev.contactsmanager.di.module.FragmentModule;
 
 import dagger.Component;
 
@@ -24,7 +23,5 @@ import dagger.Component;
 public interface ConfigPersistentComponent {
 
     ActivityComponent activityComponent(ActivityModule activityModule);
-
-    FragmentComponent fragmentComponent(FragmentModule fragmentModule);
 
 }

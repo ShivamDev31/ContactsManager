@@ -71,12 +71,12 @@ public class ContactsFragmentPresenter extends BasePresenter<ContactsFragmentScr
     private void filterFavouriteContacts(List<ContactData> contactData) {
         List<ContactData> favouriteList = new ArrayList<>();
         Collections.sort(contactData);
-        for (ContactData contact : contactData) {
-            if (contact.isFavourite) {
-                favouriteList.add(contact);
-            }
-        }
+        Subscription subs = Observable.from(contactData)
+                .filter(contactData1 -> contactData1.isFavourite)
+                .subscribe(favouriteList::add);
+
         contactData.addAll(0, favouriteList);
+        addSubscription(subs);
     }
 
     private void showContactsOnUi(List<ContactData> contactData) {

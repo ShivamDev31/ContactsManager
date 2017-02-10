@@ -1,19 +1,31 @@
 package com.shivamdev.contactsmanager.util;
 
+import android.os.Build;
 import android.support.annotation.IdRes;
 import android.support.test.espresso.PerformException;
 import android.support.test.espresso.UiController;
 import android.support.test.espresso.ViewAction;
+import android.support.test.espresso.matcher.BoundedMatcher;
 import android.support.test.espresso.matcher.ViewMatchers;
 import android.support.test.espresso.util.HumanReadables;
+import android.support.test.uiautomator.UiDevice;
+import android.support.test.uiautomator.UiObject;
+import android.support.test.uiautomator.UiObjectNotFoundException;
+import android.support.test.uiautomator.UiSelector;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.shivamdev.contactsmanager.matchers.DrawableMatcher;
 import com.shivamdev.contactsmanager.matchers.RecyclerViewMatcher;
 
+import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
+
+import timber.log.Timber;
+
+import static android.support.test.InstrumentationRegistry.getInstrumentation;
 
 /**
  * Created by shivam on 8/2/17.
@@ -111,6 +123,34 @@ public class TestUtils {
 
     public static Matcher<View> noDrawable() {
         return new DrawableMatcher(-1);
+    }
+
+    public static BoundedMatcher<View, ImageView> hasDrawable() {
+        return new BoundedMatcher<View, ImageView>(ImageView.class) {
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("has drawable");
+            }
+
+            @Override
+            public boolean matchesSafely(ImageView imageView) {
+                return imageView.getDrawable() != null;
+            }
+        };
+    }
+
+    public static void grantPermissions() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            UiDevice device = UiDevice.getInstance(getInstrumentation());
+            UiObject allowPermissions = device.findObject(new UiSelector().text("Allow"));
+            if (allowPermissions.exists()) {
+                try {
+                    allowPermissions.click();
+                } catch (UiObjectNotFoundException e) {
+                    Timber.e(e, "There is no permissions dialog to interact with ");
+                }
+            }
+        }
     }
 
 }

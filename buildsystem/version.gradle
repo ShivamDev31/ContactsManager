@@ -47,5 +47,6 @@ ext {
             mockwebserver       : "3.6.0",
             okhttpidlingresource: "1.0.0",
             restmock            : "0.2.0",
+            uiautomator         : "2.1.2",
     ]
 }

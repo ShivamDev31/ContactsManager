@@ -1,16 +1,10 @@
 apply plugin: 'com.android.application'
 apply from: '../config/quality/quality.gradle'
 apply plugin: 'me.tatarka.retrolambda'
-//apply plugin: 'com.neenbedankt.android-apt'
 apply plugin: 'let'
 
 android {
 
-    dexOptions {
-        maxProcessCount 4
-        preDexLibraries false
-        javaMaxHeapSize "8g"
-    }
 
     dataBinding {
         enabled = true
@@ -25,11 +19,10 @@ android {
         versionCode config.versionCode
         versionName config.versionName
         testInstrumentationRunner "com.shivamdev.contactsmanager.runner.DemoTestRunner"
-        //multiDexEnabled true
     }
 
     buildTypes {
-        release {
+        debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -70,7 +63,6 @@ dependencies {
     compile "com.android.support:support-v4:${libs.support}"
     compile "com.android.support:appcompat-v7:${libs.support}"
     compile "com.android.support:design:${libs.support}"
-    //compile "com.android.support:multidex:${libs.multidex}"
     compile "com.android.support:support-annotations:${libs.support}"
 
     // Networking
@@ -117,6 +109,7 @@ dependencies {
     androidTestCompile "org.mockito:mockito-core:${testing.mockito}"
     androidTestCompile "com.android.support:support-annotations:${libs.support}"
     androidTestCompile "com.android.support.test.espresso:espresso-core:${testing.espresso}"
+    androidTestCompile "com.android.support.test.espresso:espresso-intents:${testing.espresso}"
     androidTestCompile "com.android.support:support-annotations:${libs.support}"
     androidTestCompile("com.android.support.test.espresso:espresso-contrib:${testing.espresso}") {
         exclude group: 'com.android.support', module: 'appcompat'
@@ -132,6 +125,8 @@ dependencies {
     androidTestCompile("com.jakewharton.espresso:okhttp3-idling-resource:${testing.okhttpidlingresource}") {
         exclude group: 'com.android.support'
     }
+
+    androidTestCompile "com.android.support.test.uiautomator:uiautomator-v18:${testing.uiautomator}"
     androidTestCompile "com.squareup.okhttp3:mockwebserver:${testing.mockwebserver}"
     androidTestCompile "com.github.andrzejchm.RESTMock:android:${testing.restmock}"
 

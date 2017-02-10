@@ -12,7 +12,7 @@ import javax.inject.Scope;
  */
 
 /**
- * A scoping annotation to permit dependencies conform to the life of the
+ * A scoping annotation to permit dependencies confirm to the life of the
  * {@link ConfigPersistentComponent}
  */
 @Scope
