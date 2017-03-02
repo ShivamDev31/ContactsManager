@@ -85,8 +85,7 @@ public class ContactDetailsPresenter extends BasePresenter<ContactDetailsScreen>
         }
     }
 
-    public void
-    callNumber(String phoneNumber) {
+    public void callNumber(String phoneNumber) {
         if (CommonUtils.isPhoneNumberValid(phoneNumber)) {
             getView().dialPhoneNumber(phoneNumber);
         } else {

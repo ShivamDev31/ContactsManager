@@ -1,7 +1,5 @@
 package com.shivamdev.contactsmanager.common.mvp;
 
-import rx.Observable;
-import rx.Single;
 import rx.Subscription;
 import rx.subscriptions.CompositeSubscription;
 
@@ -52,40 +50,6 @@ public class BasePresenter<T extends MvpView> implements Presenter<T> {
         MvpViewNotAttachedException() {
             super("Please call Presenter.attachView(MvpView) before" +
                     " requesting data to the Presenter");
-        }
-    }
-
-    /**
-     * Encapsulate the result of an rx Observable.
-     * This model is meant to be used by the children presenters to easily keep a reference
-     * to the latest loaded result so that it can be easily emitted again when on configuration
-     * changes.
-     */
-    protected static class DataResult<T> {
-
-        private T mData;
-        private Throwable mError;
-
-        public DataResult(T data) {
-            mData = data;
-        }
-
-        public DataResult(Throwable error) {
-            mError = error;
-        }
-
-        public Single<T> toSingle() {
-            if (mError != null) {
-                return Single.error(mError);
-            }
-            return Single.just(mData);
-        }
-
-        public Observable<T> toObservable() {
-            if (mError != null) {
-                return Observable.error(mError);
-            }
-            return Observable.just(mData);
         }
     }
 }
